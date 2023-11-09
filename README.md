@@ -5,6 +5,7 @@
     - Mykytyn Sofiia      [CS-413]
     - Molochii Viktoriia  [CS-415]
     - Yurii Yano          [CS-413]
+    - Iryna Koval         [CS-413]
 
 ## Result of building image and running container:
 ![Part 1](./images_readme/image-1.png)
