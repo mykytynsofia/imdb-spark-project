@@ -7,9 +7,11 @@ FROM openjdk:${OPENJDK_VERSION}-${IMAGE_VARIANT}
 
 COPY --from=py3 / /
 
+WORKDIR /app
+
 ARG PYSPARK_VERSION=3.2.0
 RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION}
 
-COPY . .
+COPY . /app
 
 CMD python main.py
