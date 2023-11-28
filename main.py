@@ -3,16 +3,17 @@ from pyspark.sql import SparkSession  # сесія на основі модул�
                                       # тобто на далі ми працюватимемо з підмодулем Dataframes/SQL_API (є ще ML, Graphs, Streamimg)
 import pyspark.sql.types as t
 from pyspark.sql.functions import expr
+import participants.yano as yano
+import datasets_paths as paths
 
-
-# підняти кластер (тобто створити нашу точку входу в spark application - це буде наша спарк сесія (так як у браузері коли користувач відкрив його то створюється нова сесія, і тут так))
+# підняти кластер (тобто створити нашу точку входу в spark application - це буде наша спарк сесія)
 spark_session = (SparkSession.builder
                               .master('local') # посилання на кластер
                               .appName('first app')
                               .config(conf=SparkConf()) # default conf
                               .getOrCreate()) # якщо сесія вже запущена то її отримати, якщо немає то створити
 
-PATH='./dataset/title.basics.tsv'
+PATH= paths.PATH_TITLE_BASICS
 
 
 def test_docker():
@@ -84,3 +85,6 @@ def create_df_file(path):
 test_docker()
 create_df_basic()
 create_df_file(PATH)
+
+
+yano.load_name_basics_df(paths.PATH_NAME_BASICS, spark_session)

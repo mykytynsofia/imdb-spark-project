@@ -1,2 +1,5 @@
 .idea
-/dataset
+/datasets
+__pycache__/
+/participants/__pycache__/
+/participants/.DS_Store
