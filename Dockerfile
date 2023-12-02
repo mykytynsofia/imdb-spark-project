@@ -11,6 +11,8 @@ WORKDIR /app
 
 ARG PYSPARK_VERSION=3.2.0
 RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION}
+RUN pip install requests && pip install beautifulsoup4
+
 
 COPY . /app
 

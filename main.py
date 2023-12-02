@@ -8,6 +8,7 @@ import pyspark.sql.functions as f
 import participants.yano as yano
 import datasets_paths as paths
 
+
 # підняти кластер (тобто створити нашу точку входу в spark application - це буде наша спарк сесія)
 spark_session = (
     SparkSession.builder.master("local")  # посилання на кластер
@@ -99,9 +100,13 @@ def create_df_file(path):
 # create_df_basic()
 # create_df_file(PATH)
 
-name_basics_df = yano.load_name_basics_df(paths.PATH_NAME_BASICS, spark_session, t, f)
-print('Main: ')
-name_basics_df.show()
-name_basics_df.printSchema()
+
+# name_basics_df = yano.load_name_basics_df(paths.PATH_NAME_BASICS, spark_session, f)
+# print(' -------> "main.py" name_basics_df :')
+# name_basics_df.show()
+# name_basics_df.printSchema()
 # stats_df = name_basics_df.describe() # займає багато часу
 # stats_df.show()
+
+yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f);
+
