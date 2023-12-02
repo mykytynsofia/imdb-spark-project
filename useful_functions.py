@@ -1,8 +1,8 @@
 import re
 import os
 
-def get_statistics(df, count=True, describe=True, summary=True):
-    print("--------------------------------- name.basics.tsv ---------------------------------")
+def get_statistics(df, df_name, count=True, describe=True, summary=True):
+    print(f"--------------------------------- {df_name} ---------------------------------")
     if count:
         print("Number of entries:", df.count())
     if describe:

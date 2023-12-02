@@ -5,6 +5,8 @@ from useful_functions import (get_statistics,
                             str_to_arr_type,
                             create_folder)
 import columns.columns_name_basics as columns_name_basics
+import columns.columns_title_akas as columns_title_akas
+
 from schemas import schema_name_basics, schema_name_basics_final
 from parser import parse_site_for_title_akas
 
@@ -36,7 +38,7 @@ def load_name_basics_df(path, spark_session, f):
     for i, old_col in enumerate(cols):
         name_basics_df = name_basics_df.withColumnRenamed(old_col, new_cols_names[i])
 
-    # get_statistics(name_basics_df)
+    # get_statistics(name_basics_df, 'name_basics_df')
 
     """
         Бачимо, що у нашому df всього 13045749 записів, з яких not null:
@@ -64,7 +66,7 @@ def load_name_basics_df(path, spark_session, f):
         not stated [primary_profession] =  2599340 (13045749 - 10446409 ✅)                                
         not stated [known_for_titles] =  1454945   (13045749 - 11590804 ✅)              
     '''
-    # get_statistics(name_basics_df) # screen 1
+    # get_statistics(name_basics_df, 'name_basics_df') # screen 1
 
 
     name_basics_df.show(30, truncate=False)
@@ -76,7 +78,7 @@ def load_name_basics_df(path, spark_session, f):
     name_basics_df.show(truncate=False)
     name_basics_df.printSchema()
 
-    # get_statistics(name_basics_df, True, False, False) # no sense, cuz no numeric columns
+    # get_statistics(name_basics_df, 'name_basics_df', True, False, False) # no sense, cuz no numeric columns
 
     # Save to csv file
     create_folder(paths.PATH_NAME_BASICS_MOD)
@@ -95,14 +97,46 @@ def load_title_akas_df(path, spark_session, f):
         parse_site_for_title_akas(paths.PATH_LOCALES_CUSTOM)
 
 
-
     title_akas_df = spark_session.read.csv(path,
                                         sep=r"\t", 
                                         header=True, 
                                         nullValue="\\N"
                                         )
-    # title_akas_df.show()
-    title_akas_df.printSchema()
-    # get_statistics(title_akas_df)
+    # get_statistics(title_akas_df, 'title_akas_df')
 
+    cols = title_akas_df.columns 
+    new_cols_names = [camel_to_snake(c) for c in cols]
+
+    # Rename columns to 'snake' case  -  using 'withColumnRenamed(old, new)'
+    for i, old_col in enumerate(cols):
+        title_akas_df = title_akas_df.withColumnRenamed(old_col, new_cols_names[i])
+
+    title_akas_df.show()
+    title_akas_df.printSchema()
+
+    # Дістання рядків, де 'title' = null, а 'region' = не null
+    df_null_language = title_akas_df.filter((f.col(columns_title_akas.language).isNull()) &
+                                        (f.col(columns_title_akas.region).isNotNull()))
+
+    # Дістання рядків, де 'title' = не null, а 'region' = null
+    df_null_region = title_akas_df.filter((f.col(columns_title_akas.language).isNotNull()) &
+                                        (f.col(columns_title_akas.region).isNull()))
+
+    
+    print("[null language] Number of entries:", df_null_language.count())
+    df_null_language.show()
+
+    # 37973032 - 31140396 = 6832636 (4919571)
+    # усього рядків - усього значень колонки 'language'  = null значеннь колонки 'language' 
+    # (к-сть рядків за допомогою яких ми по плану зможемо відновити 'language' з колонки ʼregionʼ ) 
+
+
+    print("[null region] Number of entries:", df_null_region.count())
+    df_null_region.show() 
+    # немає таких
+
+
+    # Об'єднання датафреймів
+    # df_combined = df_null_title.union(df_null_region)
+    # df_combined.show()
     
