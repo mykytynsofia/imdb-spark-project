@@ -27,4 +27,29 @@ schema_name_basics_final = t.StructType(
 
 # --------------------------------------- TITLE AKAS -----------------------------------------
 
+# Схема, яка використовуватиметься для першого зчитування датасету
+schema_title_akas = t.StructType(
+    [
+        t.StructField("titleId", t.StringType(), True),
+        t.StructField("ordering", t.IntegerType(), True),
+        t.StructField("title", t.StringType(), True),
+        t.StructField("region", t.StringType(), True),
+        t.StructField("language", t.StringType(), True),
+        t.StructField("types", t.StringType(), True),
+        t.StructField("attributes", t.StringType(), True),
+        t.StructField("isOriginalTitle", t.IntegerType(), True),
+    ]
+)
+
+# Схема, яка використовуватиметься для вже обробленого датасету
+schema_title_akas_final = t.StructType(
+    [
+        t.StructField(c.columns_title_akas.title_id, t.StringType(), True),
+        t.StructField(c.columns_title_akas.ordering, t.IntegerType(), True),
+        t.StructField(c.columns_title_akas.title, t.StringType(), True),
+        t.StructField(c.columns_title_akas.region, t.StringType(), True),
+        t.StructField(c.columns_title_akas.language, t.StringType(), True),
+        t.StructField(c.columns_title_akas.is_original_title, t.BooleanType(), True),
+    ]
+)
 

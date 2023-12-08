@@ -7,7 +7,6 @@ PATH_TITLE_CREW = RAW_DATASETS_PATH + 'title.crew.tsv'
 PATH_TITLE_EPISODE = RAW_DATASETS_PATH + 'title.episode.tsv'
 PATH_TITLE_PRINCIPALS = RAW_DATASETS_PATH + 'title.principals.tsv'
 PATH_TITLE_RATINGS = RAW_DATASETS_PATH + 'title.ratings.tsv'
-PATH_LOCALES_CUSTOM = RAW_DATASETS_PATH + 'locales.tsv'
 
 MOD_DATASETS_PATH = './datasets_mod/'
 

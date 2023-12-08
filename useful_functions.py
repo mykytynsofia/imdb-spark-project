@@ -1,5 +1,6 @@
 import re
 import os
+import datasets_paths as paths
 
 def get_statistics(df, df_name, count=True, describe=True, summary=True):
     print(f"--------------------------------- {df_name} ---------------------------------")
@@ -42,7 +43,7 @@ def str_to_arr_type(df, cols, splitter, f):
         df = df.withColumn(
             col_name,
             f.split(f.trim(f.col(col_name)), splitter),
-        )
+        ) 
 
     # Перевірка типу даних колонок з масиву ʼcolsʼ (також є у printSchema)
     for col_name in cols:
@@ -61,7 +62,7 @@ def create_folder(path, folder_name):
     '''
 
     # Construct the full path for the new folder
-    # new_folder_path = os.path.join(path, folder_name)
+    path = os.path.join(path, folder_name)
 
     # Check if the folder doesn't exist, then create it
     if not os.path.exists(path):
@@ -69,3 +70,4 @@ def create_folder(path, folder_name):
         print(f"Folder '{folder_name}' created successfully in '{path}'")
     else:
         print(f"Folder '{folder_name}' already exists in '{path}'")
+    
