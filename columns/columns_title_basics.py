@@ -1,0 +1,10 @@
+tconst = "tconst"
+titleType = "titleType"
+primaryTitle = "primaryTitle"
+originalTitle = "originalTitle"
+isAdult = "isAdult"
+startYear = "startYear"
+endYear = "endYear"
+runtimeMinutes = "runtimeMinutes"
+genres = "genres"
+

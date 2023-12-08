@@ -1,6 +1,7 @@
 import pyspark.sql.types as t
 import columns as c
 import columns.columns_title_principals as columns_title_principals
+import columns.columns_title_basics as columns_title_basics
 
 # --------------------------------------- NAME BASICS -----------------------------------------
 
@@ -82,3 +83,33 @@ schema_title_principals_final = t.StructType(
     ]
 )
 
+# --------------------------------------- TITLE BASICS -----------------------------------------
+
+# Схема, яка використовуватиметься для першого зчитування датасету
+schema_title_basics = t.StructType(
+    [
+        t.StructField("tconst", t.StringType(), True),
+        t.StructField("titleType", t.StringType(), True),
+        t.StructField("primaryTitle", t.StringType(), True),
+        t.StructField("originalTitle", t.StringType(), True),
+        t.StructField("isAdult", t.IntegerType(), True),
+        t.StructField("startYear", t.IntegerType(), True),
+        t.StructField("endYear", t.IntegerType(), True),
+        t.StructField("runtimeMinutes", t.StringType(), True),
+        t.StructField("genres", t.StringType(), True),
+    ]
+)
+
+# Схема, яка використовуватиметься для вже обробленого датасету
+schema_title_basics_final = t.StructType(
+    [
+        t.StructField(columns_title_basics.tconst, t.StringType(), True),
+        t.StructField(columns_title_basics.titleType, t.StringType(), True),
+        t.StructField(columns_title_basics.primaryTitle, t.StringType(), True),
+        t.StructField(columns_title_basics.originalTitle, t.StringType(), True),
+        t.StructField(columns_title_basics.isAdult, t.BooleanType(), True),
+        t.StructField(columns_title_basics.startYear, t.IntegerType(), True),
+        t.StructField(columns_title_basics.runtimeMinutes, t.StringType(), True),
+        t.StructField(columns_title_basics.genres, t.StringType(), True),
+    ]
+)
