@@ -6,6 +6,7 @@ import pyspark.sql.types as t
 import pyspark.sql.functions as f
 
 import participants.yano as yano
+import participants.shponarskyi as shponarskyi
 import datasets_paths as paths
 
 
@@ -108,5 +109,6 @@ def create_df_file(path):
 # stats_df = name_basics_df.describe() # займає багато часу
 # stats_df.show()
 
-yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f);
+# yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f)
+shponarskyi.process_title_ratings(spark_session=spark_session, f=f, title_ratings_path=paths.PATH_TITLE_RATINGS, title_basics_path=paths.PATH_TITLE_BASICS)
 
