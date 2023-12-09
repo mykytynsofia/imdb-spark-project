@@ -9,6 +9,8 @@ import participants.yano as yano
 import participants.shponarskyi as shponarskyi
 import datasets_paths as paths
 
+from pyspark.sql import Window
+# from useful_functions import init_datasets_folders
 
 # підняти кластер (тобто створити нашу точку входу в spark application - це буде наша спарк сесія)
 spark_session = (
@@ -17,6 +19,8 @@ spark_session = (
     .config(conf=SparkConf())  # default conf
     .getOrCreate()
 )  # якщо сесія вже запущена то її отримати, якщо немає то створити
+
+# init_datasets_folders()
 
 PATH = paths.PATH_TITLE_BASICS
 
@@ -102,7 +106,7 @@ def create_df_file(path):
 # create_df_file(PATH)
 
 
-# name_basics_df = yano.load_name_basics_df(paths.PATH_NAME_BASICS, spark_session, f)
+# name_basics_df = yano.load_name_basics_df(paths.PATH_NAME_BASICS, spark_session, f, t)
 # print(' -------> "main.py" name_basics_df :')
 # name_basics_df.show()
 # name_basics_df.printSchema()
@@ -110,5 +114,8 @@ def create_df_file(path):
 # stats_df.show()
 
 # yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f)
-shponarskyi.process_title_ratings(spark_session=spark_session, f=f, title_ratings_path=paths.PATH_TITLE_RATINGS, title_basics_path=paths.PATH_TITLE_BASICS)
+# shponarskyi.process_title_ratings(spark_session=spark_session, f=f, title_ratings_path=paths.PATH_TITLE_RATINGS, title_basics_path=paths.PATH_TITLE_BASICS)
+# title_akas_df = yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f, t, Window);
+# title_akas_df.show()
+# title_akas_df.printSchema()
 
