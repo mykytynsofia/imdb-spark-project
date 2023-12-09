@@ -78,7 +78,6 @@ schema_title_principals_final = t.StructType(
         t.StructField(columns_title_principals.ordering, t.IntegerType(), True),
         t.StructField(columns_title_principals.nconst, t.StringType(), True),
         t.StructField(columns_title_principals.category, t.StringType(), True),
-        t.StructField(columns_title_principals.job, t.StringType(), True),
         t.StructField(columns_title_principals.characters, t.StringType(), True),
     ]
 )
@@ -95,7 +94,7 @@ schema_title_basics = t.StructType(
         t.StructField("isAdult", t.IntegerType(), True),
         t.StructField("startYear", t.IntegerType(), True),
         t.StructField("endYear", t.IntegerType(), True),
-        t.StructField("runtimeMinutes", t.StringType(), True),
+        t.StructField("runtimeMinutes", t.IntegerType(), True),
         t.StructField("genres", t.StringType(), True),
     ]
 )
@@ -104,15 +103,17 @@ schema_title_basics = t.StructType(
 schema_title_basics_final = t.StructType(
     [
         t.StructField(columns_title_basics.tconst, t.StringType(), True),
-        t.StructField(columns_title_basics.titleType, t.StringType(), True),
-        t.StructField(columns_title_basics.primaryTitle, t.StringType(), True),
-        t.StructField(columns_title_basics.originalTitle, t.StringType(), True),
-        t.StructField(columns_title_basics.isAdult, t.BooleanType(), True),
-        t.StructField(columns_title_basics.startYear, t.IntegerType(), True),
-        t.StructField(columns_title_basics.runtimeMinutes, t.StringType(), True),
+        t.StructField(columns_title_basics.title_type, t.StringType(), True),
+        t.StructField(columns_title_basics.primary_title, t.StringType(), True),
+        t.StructField(columns_title_basics.original_title, t.StringType(), True),
+        t.StructField(columns_title_basics.is_adult, t.BooleanType(), True),
+        t.StructField(columns_title_basics.start_year, t.IntegerType(), True),
+        t.StructField(columns_title_basics.runtime_minutes, t.IntegerType(), True),
         t.StructField(columns_title_basics.genres, t.StringType(), True),
     ]
 )
+
+# --------------------------------------- TITLE EPISODE -----------------------------------------
 
 # Схема, яка використовуватиметься для першого зчитування датасету
 schema_title_episode = t.StructType(
@@ -128,9 +129,9 @@ schema_title_episode = t.StructType(
 schema_title_episode_final = t.StructType(
     [
         t.StructField(columns_title_episode.tconst, t.StringType(), True),
-        t.StructField(columns_title_episode.parentTconst, t.StringType(), True),
-        t.StructField(columns_title_episode.seasonNumber, t.StringType(), True),
-        t.StructField(columns_title_episode.episodeNumber, t.StringType(), True),
+        t.StructField(columns_title_episode.parent_tconst, t.StringType(), True),
+        t.StructField(columns_title_episode.season_number, t.IntegerType(), True),
+        t.StructField(columns_title_episode.episode_number, t.IntegerType(), True),
     ]
 )
 

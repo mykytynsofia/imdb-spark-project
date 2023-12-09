@@ -25,20 +25,20 @@ def load_title_basics_df(path, spark_session, f):
                                     schema=schema_title_basics_final)
         return str_to_arr_type(df_ready, arrayed_cols_names, ',', f)
 
-    name_basics_df = spark_session.read.csv(path,
+    title_basics_df = spark_session.read.csv(path,
                                             sep=r"\t", 
                                             header=True, 
                                             nullValue="\\N", 
                                             schema=schema_title_basics)
                                             
-    cols = name_basics_df.columns 
+    cols = title_basics_df.columns 
     new_cols_names = [camel_to_snake(c) for c in cols]
 
     # Rename columns to 'snake' case  -  using 'withColumnRenamed(old, new)'
     for i, old_col in enumerate(cols):
-        name_basics_df = name_basics_df.withColumnRenamed(old_col, new_cols_names[i])
+        title_basics_df = title_basics_df.withColumnRenamed(old_col, new_cols_names[i])
 
-    # get_statistics(name_basics_df, "TITLE BASICS changede columns name")
+    # get_statistics(title_basics_df, "TITLE BASICS changede columns name")
 
     """
         Бачимо, що у нашому df всього 10371207 записів, з яких not null:
@@ -56,29 +56,29 @@ def load_title_basics_df(path, spark_session, f):
     """
     
     ''' В колонці is_adult змінимо некоректні записи на Null та перетворимо її на BoolType '''
-    name_basics_df = name_basics_df.withColumn(
+    title_basics_df = title_basics_df.withColumn(
         'is_adult',
         f.when(f.col('is_adult') == 1, True)
         .when(f.col('is_adult') == 0, False)
         .otherwise(None)
     )
 
-    # name_basics_df = name_basics_df.fillna(-1, subset=['start_year', 'runtime_minutes']) 
-    # name_basics_df = name_basics_df.fillna('not stated', subset=arrayed_cols_names)   
+    # title_basics_df = title_basics_df.fillna(-1, subset=['start_year', 'runtime_minutes']) 
+    # title_basics_df = title_basics_df.fillna('not stated', subset=arrayed_cols_names)   
 
     ''' Видалимо колонки end_year '''
-    name_basics_df = name_basics_df.drop('end_year')
+    title_basics_df = title_basics_df.drop('end_year')
 
-    # name_basics_df.printSchema()
+    # title_basics_df.printSchema()
 
-    # get_statistics(name_basics_df, "TITLE BASICS")
+    # get_statistics(title_basics_df, "TITLE BASICS")
 
     # Save to csv file
     create_folder(paths.PATH_TITLE_BASICS_MOD, 'title_basics_mod')
     print(f'Saving to {paths.PATH_TITLE_BASICS_MOD} ...')
-    name_basics_df.write.csv(paths.PATH_TITLE_BASICS_MOD, header=True, mode='overwrite', sep='\t')
-    print(f"name_basis's been modified and saved successfully!")
+    title_basics_df.write.csv(paths.PATH_TITLE_BASICS_MOD, header=True, mode='overwrite', sep='\t')
+    print(f"title_basics's been modified and saved successfully!")
 
-    name_basics_df_with_array_type = str_to_arr_type(name_basics_df, arrayed_cols_names, ',', f)
+    title_basics_df_with_array_type = str_to_arr_type(title_basics_df, arrayed_cols_names, ',', f)
     
-    return name_basics_df_with_array_type
+    return title_basics_df_with_array_type
