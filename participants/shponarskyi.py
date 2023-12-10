@@ -16,11 +16,11 @@ def load_title_ratings_df(spark_session, path, f):
     if os.path.exists(paths.PATH_TITLE_RATINGS_MOD):
         print(f"Title ratings already preprocessed")
 
-        df = spark_session.read.csv(paths.PATH_NAME_BASICS_MOD,
+        df = spark_session.read.csv(paths.PATH_TITLE_RATINGS_MOD,
                                           sep=r"\t",
                                           header=True,
                                           nullValue="\\N",
-                                          schema=schema_title_basics_final)
+                                          schema=schema_title_ratings_final)
 
         return str_to_arr_type(df, [], ',', f)
 
@@ -28,7 +28,7 @@ def load_title_ratings_df(spark_session, path, f):
                                             sep=r"\t",
                                             header=True,
                                             nullValue="\\N",
-                                            schema=schema_title_basics_final)
+                                            schema=schema_title_ratings)
 
     columns = title_ratings_df.columns 
     renamed_columns = [camel_to_snake(c) for c in columns]
@@ -36,29 +36,16 @@ def load_title_ratings_df(spark_session, path, f):
     for i, column in enumerate(columns):
         title_ratings_df = title_ratings_df.withColumnRenamed(column, renamed_columns[i])
     
-    get_statistics(title_ratings_df, 'title_ratings_df')
+    # get_statistics(title_ratings_df, 'title_ratings_df')
 
     title_ratings_df = title_ratings_df.na.drop(subset=title_ratings_df.columns)
 
-    title_ratings_df.show(30, truncate=False)
-    title_ratings_df.printSchema()
+    # title_ratings_df.show(30, truncate=False)
+    # title_ratings_df.printSchema()
 
     create_folder(paths.PATH_TITLE_RATINGS_MOD, 'title_ratings_mod')
     print(f'Saving to {paths.PATH_TITLE_RATINGS_MOD} ...')
     title_ratings_df.write.csv(paths.PATH_TITLE_RATINGS_MOD, header=True, mode='overwrite', sep='\t')
 
-    return str_to_arr_type(title_ratings_df, [], ',', f)
-
-
-def process_title_ratings(spark_session, title_ratings_path, title_basics_path, f):
-    ratings_df = spark_session.read.csv(
-        title_ratings_path, sep=r"\t", header=True, nullValue='\\N', schema=schema_title_ratings)
-
-    title_basics_df = spark_session.read.csv(title_basics_path,
-                                             sep=r"\t",
-                                             header=True,
-                                             nullValue="\\N",
-                                             schema=schema_title_basics)
-
-    ratings_df.printSchema()
-    title_basics_df.printSchema()
+    # return str_to_arr_type(title_ratings_df, [], ',', f)
+    return title_ratings_df

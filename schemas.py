@@ -90,8 +90,8 @@ schema_title_principals_final = t.StructType(
 schema_title_ratings = t.StructType(
     [
         t.StructField("tconst", dataType=t.StringType()),  # поле в структурі
-        t.StructField("averageRating", dataType=t.StringType()),  # поле в структурі
-        t.StructField("numVotes", dataType=t.StringType()),  # поле в структурі
+        t.StructField("averageRating", dataType=t.FloatType()),  # поле в структурі
+        t.StructField("numVotes", dataType=t.IntegerType()),  # поле в структурі
     ]
 )
 
@@ -99,8 +99,8 @@ schema_title_ratings = t.StructType(
 schema_title_ratings_final = t.StructType(
     [
         t.StructField(columns_title_ratings.tconst, t.StringType(), True),
-        t.StructField(columns_title_ratings.averageRating, t.StringType(), True),
-        t.StructField(columns_title_ratings.numVotes, t.StringType(), True),
+        t.StructField(columns_title_ratings.averageRating, t.FloatType(), True),
+        t.StructField(columns_title_ratings.numVotes, t.IntegerType(), True),
     ]
 )
 
