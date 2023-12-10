@@ -13,7 +13,7 @@ from pyspark.sql.functions import col, sum
 
 
 def load_title_ratings_df(spark_session, path, f):
-    if os.listdir(paths.PATH_TITLE_RATINGS_MOD):
+    if os.path.exists(paths.PATH_TITLE_RATINGS_MOD):
         print(f"Title ratings already preprocessed")
 
         df = spark_session.read.csv(paths.PATH_NAME_BASICS_MOD,
@@ -43,7 +43,7 @@ def load_title_ratings_df(spark_session, path, f):
     title_ratings_df.show(30, truncate=False)
     title_ratings_df.printSchema()
 
-    create_folder(paths.PATH_TITLE_RATINGS_MOD)
+    create_folder(paths.PATH_TITLE_RATINGS_MOD, 'title_ratings_mod')
     print(f'Saving to {paths.PATH_TITLE_RATINGS_MOD} ...')
     title_ratings_df.write.csv(paths.PATH_TITLE_RATINGS_MOD, header=True, mode='overwrite', sep='\t')
 
