@@ -31,7 +31,10 @@ title_principals_df = koval.load_title_principals_df(paths.PATH_TITLE_PRINCIPALS
 # # name_basics_df.show()
 # name_basics_df.printSchema()
 
-# # title_akas_df.show()
+# yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f)
+# shponarskyi.process_title_ratings(spark_session=spark_session, f=f, title_ratings_path=paths.PATH_TITLE_RATINGS, title_basics_path=paths.PATH_TITLE_BASICS)
+# title_akas_df = yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f, t, Window);
+# title_akas_df.show()
 # title_akas_df.printSchema()
 
 # # title_basics_df.show()
