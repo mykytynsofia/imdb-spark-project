@@ -8,7 +8,7 @@ from participants import (yano,
                         molochii,
                         mykytyn,
                         koval,
-                            )
+                        shponarskyi)
 import datasets_paths as paths
 from pyspark.sql import Window
 
@@ -26,7 +26,7 @@ title_akas_df = yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f,
 title_basics_df = shcherbii.load_title_basics_df(paths.PATH_TITLE_BASICS, spark_session, f)
 title_episode_df = mykytyn.load_title_episode_df(paths.PATH_TITLE_EPISODE, spark_session, f)
 title_principals_df = koval.load_title_principals_df(paths.PATH_TITLE_PRINCIPALS, spark_session, f)
-
+title_ratings_df = shponarskyi.load_title_ratings_df(spark_session, paths.PATH_TITLE_RATINGS, f)
 
 # # name_basics_df.show()
 # name_basics_df.printSchema()

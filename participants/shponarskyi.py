@@ -12,7 +12,7 @@ from pyspark.sql import Window
 from pyspark.sql.functions import col, sum
 
 
-def preprocess_title_ratings_df(spark_session, path, f):
+def load_title_ratings_df(spark_session, path, f):
     if os.listdir(paths.PATH_TITLE_RATINGS_MOD):
         print(f"Title ratings already preprocessed")
 
