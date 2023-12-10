@@ -1,6 +1,7 @@
 import pyspark.sql.types as t
 import columns as c
 import columns.columns_title_principals as columns_title_principals
+import columns.columns_title_ratings as columns_title_ratings
 import columns.columns_title_basics as columns_title_basics
 import columns.columns_title_episode as columns_title_episode
 # --------------------------------------- NAME BASICS -----------------------------------------
@@ -82,6 +83,27 @@ schema_title_principals_final = t.StructType(
     ]
 )
 
+# --------------------------------------- TITLE RATINGS -----------------------------------------
+
+# Схема, яка використовуватиметься для першого зчитування датасету
+
+schema_title_ratings = t.StructType(
+    [
+        t.StructField("tconst", dataType=t.StringType()),  # поле в структурі
+        t.StructField("averageRating", dataType=t.StringType()),  # поле в структурі
+        t.StructField("numVotes", dataType=t.StringType()),  # поле в структурі
+    ]
+)
+
+# Схема, яка використовуватиметься для вже обробленого датасету
+schema_title_ratings_final = t.StructType(
+    [
+        t.StructField(columns_title_ratings.tconst, t.StringType(), True),
+        t.StructField(columns_title_ratings.averageRating, t.StringType(), True),
+        t.StructField(columns_title_ratings.numVotes, t.StringType(), True),
+    ]
+)
+
 # --------------------------------------- TITLE BASICS -----------------------------------------
 
 # Схема, яка використовуватиметься для першого зчитування датасету
@@ -110,6 +132,9 @@ schema_title_basics_final = t.StructType(
         t.StructField(columns_title_basics.start_year, t.IntegerType(), True),
         t.StructField(columns_title_basics.runtime_minutes, t.IntegerType(), True),
         t.StructField(columns_title_basics.genres, t.StringType(), True),
+        t.StructField(columns_title_basics.originalTitle, t.StringType(), True),
+        t.StructField(columns_title_basics.isAdult, t.StringType(), True),
+        t.StructField(columns_title_basics.endYear, t.StringType(), True),
     ]
 )
 
