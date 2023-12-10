@@ -4,6 +4,7 @@ import columns.columns_title_principals as columns_title_principals
 import columns.columns_title_ratings as columns_title_ratings
 import columns.columns_title_basics as columns_title_basics
 import columns.columns_title_episode as columns_title_episode
+import columns.columns_title_crew as columns_title_crew
 # --------------------------------------- NAME BASICS -----------------------------------------
 
 # Схема, яка використовуватиметься для першого зчитування датасету
@@ -80,6 +81,22 @@ schema_title_principals_final = t.StructType(
         t.StructField(columns_title_principals.nconst, t.StringType(), True),
         t.StructField(columns_title_principals.category, t.StringType(), True),
         t.StructField(columns_title_principals.characters, t.StringType(), True),
+    ]
+)
+#  --------------------------------------- TITLE CREW -----------------------------------------
+
+schema_title_crew = t.StructType(
+    [
+        t.StructField("tconst", t.StringType(), True),
+        t.StructField("directors", t.StringType(), True),
+        t.StructField("writers", t.StringType(), True),
+    ]
+)
+schema_title_crew_final = t.StructType(
+    [
+        t.StructField(columns_title_crew.tconst, t.StringType(), True),
+        t.StructField(columns_title_crew.directors, t.StringType(), True),
+        t.StructField(columns_title_crew.writers, t.StringType(), True),
     ]
 )
 

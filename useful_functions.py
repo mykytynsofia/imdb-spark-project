@@ -70,4 +70,13 @@ def create_folder(path, folder_name):
         print(f"Folder '{folder_name}' created successfully in '{path}'")
     else:
         print(f"Folder '{folder_name}' already exists in '{path}'")
+
+
+def init_datasets_folders():
+    row_dataframes_folder_path = paths.RAW_DATASETS_PATH
+    folder_name = os.path.dirname(row_dataframes_folder_path)
+    create_folder(row_dataframes_folder_path[:2], folder_name)
+    mod_dataframes_folder_path = paths.MOD_DATASETS_PATH
+    folder_name = os.path.dirname(mod_dataframes_folder_path)
+    create_folder(mod_dataframes_folder_path[:2], folder_name)
     
