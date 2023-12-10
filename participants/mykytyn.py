@@ -14,6 +14,13 @@ def load_title_episode_df(path, spark_session, f):
     if os.path.exists(paths.PATH_TITLE_EPISODE_MOD):
         print(f"You've already saved title_episode df !")
 
+        df_ready = spark_session.read.csv(paths.PATH_TITLE_EPISODE_MOD,
+                                            sep=r"\t", 
+                                            header=True, 
+                                            nullValue="\\N", 
+                                            schema=schema_title_episode_final)
+        return df_ready
+
     title_episode_df = spark_session.read.csv(path,
                                             sep=r"\t",
                                             header=True,
@@ -27,7 +34,7 @@ def load_title_episode_df(path, spark_session, f):
     for i, old_col in enumerate(cols):
         title_episode_df = title_episode_df.withColumnRenamed(old_col, new_cols_names[i])
 
-    get_statistics(title_episode_df, 'title_episode_df')
+    # get_statistics(title_episode_df, 'title_episode_df')
 
     """
          Бачимо, що у нашому df всього 7849091 записів, з яких not null:
@@ -36,7 +43,7 @@ def load_title_episode_df(path, spark_session, f):
              - season_number = 6254529           [  79.68% ]         
              - episode_number = 6254529          [  79.68% ]
 
-         Щодо колонок які мають невелику к-сть null значень (season_number, episode_number) вирішено замінити їх на значення null на 'not_stated'  
+         Щодо колонок які мають невелику к-сть null значень (season_number, episode_number) вирішено замінити їх на значення null на -1  
      """
 
     title_episode_df = title_episode_df.fillna(-1, subset=['season_number', 'episode_number'])
@@ -47,7 +54,7 @@ def load_title_episode_df(path, spark_session, f):
         # Виведення результату
         print(f"-1 [{col_name}] = ", not_stated.count())
 
-    title_episode_df.show(30, truncate=False)
+    # title_episode_df.show(30, truncate=False)
 
     '''
     RESULT:

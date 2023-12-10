@@ -1,3 +1,3 @@
 tconst = "tconst"
-averageRating = "averageRating"
-numVotes = "numVotes"
+averageRating = "average_rating"
+numVotes = "num_votes"

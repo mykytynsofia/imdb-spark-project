@@ -1,4 +1,4 @@
 tconst = "tconst"
-parentTconst = "parentTconst"
-seasonNumber = "seasonNumber"
-episodeNumber = "episodeNumber"
+parent_tconst = "parent_tconst"
+season_number = "season_number"
+episode_number = "episode_number"
