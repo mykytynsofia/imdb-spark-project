@@ -64,7 +64,7 @@ def load_title_principals_df(path, spark_session, f):
     # Create a condition to filter rows with a comma in the specified column
     condition = col(column_to_check).like("%,%")  # You can also use rlike(".*[,].*") for regular expression matching
     # Apply the filter condition to the DataFrame
-    result_df = title_principals_df.filter(condition)
+    result_df = title_principals_df_with_array_type.filter(condition)
     # Show the resulting DataFrame
     result_df.show(truncate=False)
 
@@ -74,9 +74,9 @@ def load_title_principals_df(path, spark_session, f):
     # Save to csv file
     create_folder(paths.PATH_TITLE_PRINCIPALS_MOD, 'title_principals_mod')
     print(f'Saving to {paths.PATH_TITLE_PRINCIPALS_MOD} ...')
-    title_principals_df.write.csv(paths.PATH_TITLE_PRINCIPALS_MOD, header=True, mode='overwrite', sep='\t')
+    title_principals_df_with_array_type.write.csv(paths.PATH_TITLE_PRINCIPALS_MOD, header=True, mode='overwrite', sep='\t')
     print(f"title_principals's been modified and saved successfully!")
 
-    return title_principals_df
+    return title_principals_df_with_array_type
 
 
