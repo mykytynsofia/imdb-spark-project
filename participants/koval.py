@@ -59,14 +59,14 @@ def load_title_principals_df(path, spark_session, f):
     title_principals_df_with_array_type = str_to_arr_type(title_principals_df, arrayed_cols_names, ',', f)
     title_principals_df.printSchema()
 
-    # Specify the columns you want to check
-    column_to_check = columns_title_principals.characters
-    # Create a condition to filter rows with a comma in the specified column
-    condition = col(column_to_check).like("%,%")  # You can also use rlike(".*[,].*") for regular expression matching
-    # Apply the filter condition to the DataFrame
-    result_df = title_principals_df_with_array_type.filter(condition)
-    # Show the resulting DataFrame
-    result_df.show(truncate=False)
+    # # Specify the columns you want to check
+    # column_to_check = columns_title_principals.characters
+    # # Create a condition to filter rows with a comma in the specified column
+    # condition = col(column_to_check).like("%,%")  # You can also use rlike(".*[,].*") for regular expression matching
+    # # Apply the filter condition to the DataFrame
+    # result_df = title_principals_df_with_array_type.filter(condition)
+    # # Show the resulting DataFrame
+    # result_df.show(truncate=False)
 
     # print(f'Showing first 30 rows')
     # title_principals_df.show(30, truncate=False)
