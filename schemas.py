@@ -132,9 +132,6 @@ schema_title_basics_final = t.StructType(
         t.StructField(columns_title_basics.start_year, t.IntegerType(), True),
         t.StructField(columns_title_basics.runtime_minutes, t.IntegerType(), True),
         t.StructField(columns_title_basics.genres, t.StringType(), True),
-        t.StructField(columns_title_basics.originalTitle, t.StringType(), True),
-        t.StructField(columns_title_basics.isAdult, t.StringType(), True),
-        t.StructField(columns_title_basics.endYear, t.StringType(), True),
     ]
 )
 
