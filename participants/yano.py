@@ -94,7 +94,6 @@ def load_name_basics_df(path, spark_session, f, t):
     return name_basics_df_with_array_type
 
 
-
 def load_title_akas_df(path, spark_session, f, t, Window):
     if os.path.exists(paths.PATH_TITLE_AKAS_MOD):
         print(f"You've already saved title_akas df !")

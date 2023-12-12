@@ -12,6 +12,7 @@ from participants import (yano,
 import datasets_paths as paths
 from useful_functions import init_datasets_folders
 from pyspark.sql import Window
+from queries import yano_queries
 
 init_datasets_folders()
 
@@ -20,6 +21,7 @@ spark_session = (
     SparkSession.builder.master("local")  # посилання на кластер
     .appName("first app")
     .config(conf=SparkConf())  # default conf
+    # .config("spark.executor.cores", "4")
     .getOrCreate()
 )  # якщо сесія вже запущена то її отримати, якщо немає то створити
 
@@ -34,9 +36,6 @@ title_crew_df = molochii.load_title_crew_df(paths.PATH_TITLE_CREW, spark_session
 
 # # name_basics_df.show()
 # name_basics_df.printSchema()
-
-# yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f)
-# shponarskyi.process_title_ratings(spark_session=spark_session, f=f, title_ratings_path=paths.PATH_TITLE_RATINGS, title_basics_path=paths.PATH_TITLE_BASICS)
 
 # name_basics_df.show()
 # name_basics_df.printSchema()
@@ -56,5 +55,13 @@ title_crew_df = molochii.load_title_crew_df(paths.PATH_TITLE_CREW, spark_session
 # title_ratings_df.show()
 # title_ratings_df.printSchema()
 
-title_crew_df.show()
-title_crew_df.printSchema()
+# title_crew_df.show()
+# title_crew_df.printSchema()
+
+
+# yano_queries.query_one(title_basics_df, title_ratings_df, spark_session, Window, f, t).show(truncate=False)
+# yano_queries.query_two(spark_session, f, title_principals_df, name_basics_df, t).show(truncate=False)
+# yano_queries.query_three(spark_session, f, title_principals_df, title_ratings_df, name_basics_df, Window,t).show(truncate=False)
+# yano_queries.query_four(spark_session, title_crew_df, title_ratings_df, title_basics_df, name_basics_df, Window, f, t).show(truncate=False)
+# yano_queries.query_five(title_episode_df,  title_ratings_df, title_basics_df, f, t, spark_session).show(truncate=False)
+# yano_queries.query_six(title_akas_df, title_ratings_df, title_basics_df, f, t, spark_session, Window).show(truncate=False)

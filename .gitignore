@@ -5,3 +5,4 @@ __pycache__/
 /participants/__pycache__/
 /participants/.DS_Store
 **.tsv
+/queries_results
