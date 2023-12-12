@@ -10,11 +10,22 @@ from participants import (yano,
                         koval,
                         shponarskyi)
 import datasets_paths as paths
-from useful_functions import init_datasets_folders
+from useful_functions import (init_datasets_folders,
+                              init_queries_results_folder,
+                              check_folder_content)
 from pyspark.sql import Window
 from queries import yano_queries
 
-init_datasets_folders()
+init_datasets_folders() # Створяться папки datasets, datasets_mod, де зберігатимуться сирі та оброблені dfs відповідно
+                        # !NOTE! Проте, щоб запустити обробку dfs та запити, потрібно власноруч завантажити сирі датафрейми [https://datasets.imdbws.com/] у папку ʼdatasetsʼ (створену програмою) та назвати їх:
+                        # name.basics.tsv
+                        # title.akas.tsv
+                        # ...
+
+init_queries_results_folder()   # Ф-я для створення папки ʼqueries_resultsʼ в корені проекту,
+                                # щоб зберігати результати запитів
+
+check_folder_content()  # Перевірити, чи користувач завантажив усі потрібні датасети
 
 # підняти кластер (тобто створити нашу точку входу в spark application - це буде наша спарк сесія)
 spark_session = (
@@ -58,10 +69,9 @@ title_crew_df = molochii.load_title_crew_df(paths.PATH_TITLE_CREW, spark_session
 # title_crew_df.show()
 # title_crew_df.printSchema()
 
-
 # yano_queries.query_one(title_basics_df, title_ratings_df, spark_session, Window, f, t).show(truncate=False)
 # yano_queries.query_two(spark_session, f, title_principals_df, name_basics_df, t).show(truncate=False)
 # yano_queries.query_three(spark_session, f, title_principals_df, title_ratings_df, name_basics_df, Window,t).show(truncate=False)
-# yano_queries.query_four(spark_session, title_crew_df, title_ratings_df, title_basics_df, name_basics_df, Window, f, t).show(truncate=False)
+# yano_queries.query_four(spark_session, title_crew_df, title_ratings_df, title_basics_df, name_basics_df, f, t).show(truncate=False)
 # yano_queries.query_five(title_episode_df,  title_ratings_df, title_basics_df, f, t, spark_session).show(truncate=False)
 # yano_queries.query_six(title_akas_df, title_ratings_df, title_basics_df, f, t, spark_session, Window).show(truncate=False)

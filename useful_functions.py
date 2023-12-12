@@ -80,3 +80,30 @@ def init_datasets_folders():
     folder_name = os.path.dirname(mod_dataframes_folder_path)
     create_folder(mod_dataframes_folder_path[:2], folder_name)
     
+
+def init_queries_results_folder():
+    queries_result_folder_path = paths.QUERIES_RESULTS_PATH
+    folder_name = os.path.dirname(queries_result_folder_path)
+    create_folder(queries_result_folder_path[:2], folder_name)
+
+
+def check_folder_content(path=paths.RAW_DATASETS_PATH):
+    # Перевіряємо, чи є вміст у папці
+    if not os.listdir(path):
+        raise ValueError(f"The folder '{path}' is empty. Please, download all needed datasets")
+    print(f"✅ The folder '{path}' contains raw dfs")
+
+
+def check_folder_content(path=paths.RAW_DATASETS_PATH):
+    required_files = ['name.basics.tsv', 'title.akas.tsv', 'title.basics.tsv',
+                    'title.crew.tsv', 'title.episode.tsv', 'title.principals.tsv', 'title.ratings.tsv']
+
+    # Перевіряємо, чи є вміст у папці
+    folder_content = os.listdir(path)
+
+    # Перевіряємо, чи всі необхідні файли є в папці
+    missing_files = [file for file in required_files if file not in folder_content]
+    if missing_files:
+        raise ValueError(f"❌ The folder '{path}' is missing the following files: [{', '.join(missing_files)}]")
+
+    print(f"✅ The folder '{path}' contains all needed datasets.")
