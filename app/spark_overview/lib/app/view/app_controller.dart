@@ -17,6 +17,7 @@ class AppController extends StatelessWidget {
               create: (context) => MainCubit(context.read<MainRepository>()))
         ],
         child: MaterialApp(
+          theme: ThemeData(useMaterial3: true),
           routes: {'/': (context) => const MainController()},
         ),
       ),

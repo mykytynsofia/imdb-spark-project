@@ -10,10 +10,14 @@ class MainCubit extends Cubit<MainState> {
 
   final MainRepository repository;
 
+  void clear() {
+    emit(state.copyWith(data: []));
+  }
+
   Future<void> getTitleRatingsData(int option) async {
     emit(state.copyWith(status: Status.loading));
 
-    List<dynamic> results = await repository.getTitleRatingsData(option);
+    List<List<dynamic>> results = await repository.getResultCSV(option);
 
     emit(state.copyWith(data: results, status: Status.success));
   }

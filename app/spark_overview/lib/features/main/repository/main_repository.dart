@@ -1,21 +1,27 @@
-import 'dart:convert';
-
+import 'package:csv/csv.dart';
 import 'package:http/http.dart';
 
 class MainRepository {
-  Future<List<dynamic>> getTitleRatingsData(int option) async {
+  Future<List<List<dynamic>>> getResultCSV(int option) async {
     try {
-      List<dynamic> results = [];
-
-      final Response response = await get(Uri.parse(''));
+      final Response response = await get(
+          Uri.parse(
+              'https://storage.googleapis.com/imdb-dataframes-results/results/title.ratings/$option/result.csv'),
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json',
+            'Accept': '*/*'
+          });
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> json = jsonDecode(response.body);
+        List<List<dynamic>> csv =
+            const CsvToListConverter(fieldDelimiter: '|', eol: '\n')
+                .convert(response.body);
 
-        results = json['results'] as List<dynamic>;
+        return csv;
       }
 
-      return results;
+      return [];
     } catch (_) {
       rethrow;
     }

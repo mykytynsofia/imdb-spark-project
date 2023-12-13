@@ -2,7 +2,7 @@ part of 'main_cubit.dart';
 
 class MainState extends Equatable {
   final Status status;
-  final List<dynamic> data;
+  final List<List<dynamic>> data;
 
   const MainState({
     required this.status,
@@ -11,7 +11,7 @@ class MainState extends Equatable {
 
   MainState copyWith({
     Status? status,
-    List<dynamic>? data,
+    List<List<dynamic>>? data,
   }) {
     return MainState(
       status: status ?? this.status,
