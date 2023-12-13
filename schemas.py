@@ -116,7 +116,7 @@ schema_title_ratings = t.StructType(
 schema_title_ratings_final = t.StructType(
     [
         t.StructField(columns_title_ratings.tconst, t.StringType(), True),
-        t.StructField(columns_title_ratings.averageRating, t.FloatType(), True),
+        t.StructField(columns_title_ratings.averageRating, t.FloatType(), True), 
         t.StructField(columns_title_ratings.numVotes, t.IntegerType(), True),
     ]
 )

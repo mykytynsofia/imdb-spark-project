@@ -18,5 +18,5 @@ PATH_TITLE_EPISODE_MOD = MOD_DATASETS_PATH + 'title_episode'
 PATH_TITLE_PRINCIPALS_MOD = MOD_DATASETS_PATH + 'title_principals'
 PATH_TITLE_RATINGS_MOD = MOD_DATASETS_PATH + 'title_ratings'
 
-
+QUERIES_RESULTS_PATH = './queries_results/'
 

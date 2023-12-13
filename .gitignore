@@ -1,6 +1,8 @@
 .idea
 /datasets
 /datasets_mod
+/queries_results
+queries_results/
 __pycache__/
 /participants/__pycache__/
 /participants/.DS_Store

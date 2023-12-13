@@ -17,7 +17,6 @@ def load_name_basics_df(path, spark_session, f, t):
     arrayed_cols_names = [columns_name_basics.primary_profession,
                         columns_name_basics.known_for_titles]
     
-    # if os.listdir(paths.PATH_NAME_BASICS_MOD):
     if os.path.exists(paths.PATH_NAME_BASICS_MOD):
         print(f"You've already saved name_basics df !")
 
@@ -76,7 +75,7 @@ def load_name_basics_df(path, spark_session, f, t):
 
 
     ''' Видалимо колонки birth_year, death_year '''
-    name_basics_df = name_basics_df.drop('birth_year', 'death_year')
+    name_basics_df = name_basics_df.drop(columns_name_basics.birth_year, columns_name_basics.death_year)
 
     name_basics_df.show(truncate=False)
     name_basics_df.printSchema()
@@ -92,7 +91,6 @@ def load_name_basics_df(path, spark_session, f, t):
     name_basics_df_with_array_type = str_to_arr_type(name_basics_df, arrayed_cols_names, ',', f)
     
     return name_basics_df_with_array_type
-
 
 
 def load_title_akas_df(path, spark_session, f, t, Window):
@@ -145,24 +143,25 @@ def load_title_akas_df(path, spark_session, f, t, Window):
     """
 
     # *******************            Видалимо колонки types, attributes                      *******************
-    title_akas_df = title_akas_df.drop('types', 'attributes')
+    title_akas_df = title_akas_df.drop(columns_title_akas.types, columns_title_akas.attributes)
 
     # *******************            dropna  колонки is_original_title                      *******************
-    title_akas_df = title_akas_df.dropna(subset=['is_original_title'])
+    title_akas_df = title_akas_df.dropna(subset=[columns_title_akas.is_original_title])
     # print('Результат видалення рядків, де is_original_title == null : ', title_akas_df.count())
     # title_akas_df.count() = 37970949 (видалилось: 37973032 - 37970949 = 2_083)
 
 
     # *******************   видалимо усі рядки де "region"=="language"== Null (одночасно)   *******************
-    title_akas_df = title_akas_df.filter(~(f.col("region").isNull() & f.col("language").isNull()))
+    title_akas_df = title_akas_df.filter(~(f.col(columns_title_akas.region).isNull() 
+                                        & f.col(columns_title_akas.language).isNull()))
     # print('Результат видалення рядків, в яких "region", "language" == Null (одночасно) : ', title_akas_df.count())
     # title_akas_df.count() = 36057887 (видалилось: 37970949 - 36057887 = 1_913_062)
 
 
     # *******************       Перетворимо колонку is_original_title з int -> bool             *******************
     # title_akas_df.groupBy('is_original_title').count().show()   # BEFORE -->
-    title_akas_df = title_akas_df.withColumn('is_original_title',
-                                            f.col('is_original_title').cast(t.BooleanType()))
+    title_akas_df = title_akas_df.withColumn(columns_title_akas.is_original_title,
+                                            f.col(columns_title_akas.is_original_title).cast(t.BooleanType()))
     # print('Result of converting "is_original_title" from "int" to "bool" : ')
     # title_akas_df.show()
     # title_akas_df.groupBy('is_original_title').count().show()   #   <-- AFTER
@@ -170,13 +169,16 @@ def load_title_akas_df(path, spark_session, f, t, Window):
 
     #  *******************             Згенеруємо df щоб відновити language з region            *******************
     # ^ 1) Дістанемо усі рядки з title_akas_df, де "region" та "language" не є Null
-    title_akas_df_not_nulls = title_akas_df.filter(f.col("region").isNotNull() & f.col("language").isNotNull())
+    title_akas_df_not_nulls = title_akas_df.filter(f.col(columns_title_akas.region).isNotNull() 
+                                                    & f.col(columns_title_akas.language).isNotNull())
     # title_akas_df_not_nulls.show()
     # print('Df filtered ["region" & "language" isNotNull() count = ', title_akas_df_not_nulls.count())
     # title_akas_df_not_nulls.count() = 31140396 (36057887 - 31140396 = 4_917_491 рядків де є нали )
 
     # ^ 2) Виконаємо групування по "region", "language" і порахуємо к-сть кожної з комбінацій
-    region_lang_grouped_df = title_akas_df_not_nulls.groupBy('region','language').count().orderBy(['region','language'])
+    region_lang_grouped_df = (title_akas_df_not_nulls.groupBy(columns_title_akas.region, columns_title_akas.language)
+                                                    .count()
+                                                    .orderBy([columns_title_akas.region, columns_title_akas.language]))
     # print('count of rows: ', region_lang_grouped_df.count()) # 303
     # region_lang_grouped_df.show() 
     # DESCRIPTION: Бачимо, що є такі регіони (напр. ʼAFʼ), де є декілька мов ('de', 'en', 'prs') 
@@ -185,7 +187,7 @@ def load_title_akas_df(path, spark_session, f, t, Window):
     # ^ 3) Для цього використаємо ф-ю window, а саме:
     # ^    Погрупуємо записи з утвор. таблиці з попер. кроку по "region" і до кожного запису допишемо нову 
     # ^    колонку "max_count_by_region" - яка показуватиме максимальний "count" в межах його ГРУПИ!
-    window = Window.partitionBy('region').orderBy(f.col('count').desc())
+    window = Window.partitionBy(columns_title_akas.region).orderBy(f.col('count').desc())
     region_lang_grouped_max_df = region_lang_grouped_df.withColumn('max_count_by_region', f.max(f.col('count')).over(window))
     # region_lang_grouped_max_df.show()
 
@@ -193,10 +195,11 @@ def load_title_akas_df(path, spark_session, f, t, Window):
     region_lang_grouped_max_filtered_df = region_lang_grouped_max_df.filter(f.col('count')==f.col('max_count_by_region'))
     # ^    також виконаємо dropDuplicates по колонках 'region', 'count' (адже є такі мови де їх к-сть для деякого
     # ^    регіону однакова)
-    region_lang_grouped_max_filtered_df = region_lang_grouped_max_filtered_df.dropDuplicates(['region', 'count'])
+    region_lang_grouped_max_filtered_df = region_lang_grouped_max_filtered_df.dropDuplicates([
+        columns_title_akas.region, 'count'])
     # region_lang_grouped_max_filtered_df.show()
     # ^    Дістанемо лише ті колонки, які нам треба далі:
-    region_lang_grouped_max_filtered_df = region_lang_grouped_max_filtered_df.select('region', 'language')
+    region_lang_grouped_max_filtered_df = region_lang_grouped_max_filtered_df.select(columns_title_akas.region, columns_title_akas.language)
     # print('Result dataframe [region; most_common_language] count: ', region_lang_grouped_max_filtered_df.count())
     # -- count = 119 --> 
     # % RESULT: Ми отримали датафрейм "region_lang_grouped_max_filtered_df" , який містить колонки: 
@@ -224,27 +227,30 @@ def load_title_akas_df(path, spark_session, f, t, Window):
     #^  count(language) = 4_894_394 (notNull values !!!) - зі 4_917_491 ми відновили 4_894_394 (99.53 %) 
     #^  (23097 language - є null)
 
-    needed = ['title_id', 'region', 'ordering', 'language']
+    needed = [columns_title_akas.title_id, columns_title_akas.region,
+            columns_title_akas.ordering, columns_title_akas.language]
     needed_new = [c + '_new' for c in needed]
     joined_title_akas_df = joined_title_akas_df.select([f.col(old).alias(new) for old, new in zip(needed, needed_new)])
 
-    join_condition = ((title_akas_df['title_id'] == joined_title_akas_df['title_id_new']) & 
-                      (title_akas_df['ordering'] == joined_title_akas_df['ordering_new']))
+    join_condition = ((title_akas_df[columns_title_akas.title_id] == joined_title_akas_df['title_id_new']) & 
+                      (title_akas_df[columns_title_akas.ordering] == joined_title_akas_df['ordering_new']))
     title_akas_joined_df = title_akas_df.join(joined_title_akas_df, on=join_condition, how="left_outer")
     # title_akas_joined_df.show()
 
     for c_new in needed_new[:-1]:
         title_akas_joined_df = title_akas_joined_df.drop(c_new)
 
-    title_akas_joined_df = title_akas_joined_df.withColumn('language', f.when(f.col('language').isNull(), f.col('language_new'))
-                                                                                .otherwise(f.col('language')))
+    title_akas_joined_df = title_akas_joined_df.withColumn(columns_title_akas.language,
+                                                        f.when(f.col(columns_title_akas.language).isNull(),
+                                                                f.col('language_new'))
+                                                        .otherwise(f.col(columns_title_akas.language)))
     title_akas_joined_df = title_akas_joined_df.drop(needed_new[-1])
 
     # title_akas_joined_df.show()
     # title_akas_joined_df.describe().show() # count(region) = 36_057_887; count(language) = 36_034_790 (23097 language - є null)
 
     #! У нас лишилося 23_097 рядків де language == Null. Спробуємо просто видалити їх
-    title_akas_joined_df = title_akas_joined_df.dropna(subset=['language'])
+    title_akas_joined_df = title_akas_joined_df.dropna(subset=[columns_title_akas.language])
     # print(title_akas_joined_df.count()) # 36_034_790 (36_057_887 - 23_097)
 
     #  *******************                    Відновимо region з language                       *******************
