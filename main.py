@@ -13,6 +13,8 @@ import datasets_paths as paths
 from useful_functions import init_datasets_folders
 from pyspark.sql import Window
 
+from queries import mykytyn_queries
+
 init_datasets_folders()
 
 # підняти кластер (тобто створити нашу точку входу в spark application - це буде наша спарк сесія)
@@ -32,29 +34,35 @@ title_principals_df = koval.load_title_principals_df(paths.PATH_TITLE_PRINCIPALS
 title_ratings_df = shponarskyi.load_title_ratings_df(spark_session, paths.PATH_TITLE_RATINGS, f)
 title_crew_df = molochii.load_title_crew_df(paths.PATH_TITLE_CREW, spark_session, f, t)
 
-# # name_basics_df.show()
+#name_basics_df.show()
 # name_basics_df.printSchema()
 
 # yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f)
 # shponarskyi.process_title_ratings(spark_session=spark_session, f=f, title_ratings_path=paths.PATH_TITLE_RATINGS, title_basics_path=paths.PATH_TITLE_BASICS)
 
-# name_basics_df.show()
+#name_basics_df.show()
 # name_basics_df.printSchema()
 
-# title_akas_df.show()
+#title_akas_df.show()
 # title_akas_df.printSchema()
 
-# title_basics_df.show()
-# title_basics_df.printSchema()
+#title_basics_df.show()
+#title_basics_df.printSchema()
+title_episode_df.show()
+#title_episode_df.printSchema()
 
-# title_episode_df.show()
-# title_episode_df.printSchema()
-
-# title_principals_df.show()
+#title_principals_df.show()
 # title_principals_df.printSchema()
 
-# title_ratings_df.show()
+#title_ratings_df.show()
 # title_ratings_df.printSchema()
 
-title_crew_df.show()
-title_crew_df.printSchema()
+#title_crew_df.show()
+#title_crew_df.printSchema()
+
+mykytyn_queries.totalYearAfter2000(title_episode_df, title_basics_df, name_basics_df)
+mykytyn_queries.top10LowestEpisodes(title_episode_df, title_basics_df)
+mykytyn_queries.longestRuntime(title_episode_df, title_basics_df)
+mykytyn_queries.totalEpisodesEachGenre(title_episode_df, title_basics_df)
+mykytyn_queries.totalEpisodesForGameOfThrones(title_episode_df, title_basics_df)
+mykytyn_queries.topComedyActors(title_principals_df, title_basics_df, name_basics_df)
