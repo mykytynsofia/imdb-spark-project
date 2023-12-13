@@ -12,6 +12,7 @@ from participants import (yano,
 import datasets_paths as paths
 from useful_functions import init_datasets_folders
 from pyspark.sql import Window
+from queries import molochii_queries
 
 init_datasets_folders()
 
@@ -56,5 +57,18 @@ title_crew_df = molochii.load_title_crew_df(paths.PATH_TITLE_CREW, spark_session
 # title_ratings_df.show()
 # title_ratings_df.printSchema()
 
-title_crew_df.show()
-title_crew_df.printSchema()
+# title_crew_df.show()
+# title_crew_df.printSchema()
+
+
+# molochii_queries.query_one(spark_session, f, title_episode_df, title_ratings_df,title_basics_df)
+
+# molochii_queries.query_two(spark_session, f, title_basics_df)
+
+# molochii_queries.query_three(spark_session, f, title_basics_df,title_ratings_df, title_akas_df)
+
+# molochii_queries.query_four(spark_session, f, title_crew_df, name_basics_df)
+
+# molochii_queries.query_five(spark_session, f, title_principals_df, name_basics_df)
+
+# molochii_queries.query_six(title_akas_df, title_ratings_df, title_basics_df, title_crew_df, name_basics_df, f, Window, t, spark_session)

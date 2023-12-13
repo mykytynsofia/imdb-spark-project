@@ -1,6 +1,7 @@
 # here Iryna Koval will implement her 6 business questions to the data
 
-# docker run -p 80:3000 --rm -v '/Users/yurayano/PycharmProjects/pyspark:/app' --name container-spark-dev-mode spark-image:3.0
+# 
+
 
 from pyspark.sql import SparkSession  # сесія на основі модуля sql
 from pyspark import SparkConf
