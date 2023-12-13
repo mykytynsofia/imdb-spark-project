@@ -26,7 +26,8 @@ def get_schema(query_n, t):
         2: t.StructType(
             [
                 t.StructField(c_name_basics.primary_name, t.StringType(), True),
-                t.StructField("num_characters", t.IntegerType(), True),
+                t.StructField("characters_count", t.IntegerType(), True),
+                t.StructField("characters_concat", t.StringType(), True),
             ]),
         3: t.StructType(
             [
@@ -130,28 +131,42 @@ def query_one(title_basics_df, title_ratings_df, spark_session, Window, f, t):
     return top_rated_movies_by_genre
 
 
-#% Хто входить до 10-ки акторів, які зіграли найбільше персонажів у різних фільмах?
-def query_two(spark_session, f, title_principals_df, name_basics_df, t):
+#% Вивести для кожного актора ролі, які вони зіграли найбільше у своїй карʼєрі та дізнатися їх к-сть
+def query_two(spark_session, f, title_principals_df, name_basics_df, t, Window):
     queryNumber = 2
     path = f'{QUERIES_RESULTS_PATH}yano_query_{queryNumber}'
     schema_query_res = get_schema(queryNumber, t)
     df_ready = check_if_already_did_query(path, schema_query_res, spark_session)
     if df_ready: return df_ready
 
-    title_principals_df = title_principals_df.select(c_title_principals.nconst, c_title_principals.characters)
-    top_actors_characters = (title_principals_df.groupBy(c_title_principals.nconst)
-                        .agg(f.countDistinct(c_title_principals.characters)
-                            .alias('num_characters'))
-                        .orderBy('num_characters', ascending=False)
-                        .limit(10))
+    title_principals_df = title_principals_df.select(c_title_principals.nconst,
+                                                    c_title_principals.category, 
+                                                    c_title_principals.characters)
     
+    title_principals_df = title_principals_df.filter(f.col(c_title_principals.category).isin('actor','actress')
+                                                    & (~f.array_contains(f.col(c_title_principals.characters), 'not stated')))
+
+    top_actors_characters = title_principals_df.withColumn("character", f.explode(c_title_principals.characters))
+    top_actors_characters = top_actors_characters.drop(c_title_principals.characters)
+    top_actors_characters = top_actors_characters.groupBy(c_title_principals.nconst, 'character').count()
+
+    window_f = Window.partitionBy(c_title_principals.nconst).orderBy(f.col('count').desc())
+    top_actors_characters = top_actors_characters.withColumn('max_count', f.max(f.col('count')).over(window_f))
+    top_actors_characters = top_actors_characters.filter(f.col('max_count') == f.col('count'))
+    top_actors_characters = top_actors_characters.groupBy(c_title_principals.nconst).agg(f.concat_ws(", ",
+                                                                                                    f.collect_list("character"))
+                                                                                    .alias("characters_concat"))
+    top_actors_characters = top_actors_characters.withColumn("characters_count",
+                                                            f.size(f.split(top_actors_characters["characters_concat"], ", ")))
+
     name_basics_df = name_basics_df.select(c_name_basics.nconst, c_name_basics.primary_name)
     # Join with name_basics_df to get the names of the top actors
     top_actors_with_names = (
         top_actors_characters
         .join(name_basics_df, c_name_basics.nconst , how='left')
-        .select(c_name_basics.primary_name, 'num_characters')
-        .orderBy('num_characters', ascending=False)
+        .select(c_name_basics.primary_name, 'characters_count', 'characters_concat')
+        .orderBy('characters_count', ascending=False)
+        .limit(10)
     )
 
     # Save to csv file
@@ -174,7 +189,6 @@ def query_three(spark_session, f, title_principals_df, title_ratings_df, name_ba
                                                     .otherwise(f.col(c_title_principals.characters))
                                                     )
         
-
     window = (Window.partitionBy(c_name_basics.nconst, c_title_principals.characters)
                     .orderBy(c_name_basics.nconst, c_title_principals.characters))
 
@@ -245,8 +259,7 @@ def query_four(spark_session, title_crew_df, title_ratings_df, title_basics_df, 
     target_nconst = (name_basics_df.filter(f.col(c_name_basics.primary_name) == target_producer)
                                     .select(c_name_basics.nconst)
                                     .first()[c_name_basics.nconst])
-
-
+    
     # Select relevant columns from dataframes
     title_crew_df = title_crew_df.select(c_title_crew.tconst, 
                                         c_title_crew.directors)

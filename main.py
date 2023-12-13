@@ -36,7 +36,7 @@ spark_session = (
     .getOrCreate()
 )  # якщо сесія вже запущена то її отримати, якщо немає то створити
 
-
+# HANDLE DATASETS [first time] OR LOAD HANDLED DATASETS
 name_basics_df = yano.load_name_basics_df(paths.PATH_NAME_BASICS, spark_session, f, t)
 title_akas_df = yano.load_title_akas_df(paths.PATH_TITLE_AKAS, spark_session, f, t, Window)
 title_basics_df = shcherbii.load_title_basics_df(paths.PATH_TITLE_BASICS, spark_session, f)
@@ -45,33 +45,17 @@ title_principals_df = koval.load_title_principals_df(paths.PATH_TITLE_PRINCIPALS
 title_ratings_df = shponarskyi.load_title_ratings_df(spark_session, paths.PATH_TITLE_RATINGS, f)
 title_crew_df = molochii.load_title_crew_df(paths.PATH_TITLE_CREW, spark_session, f, t)
 
-# # name_basics_df.show()
-# name_basics_df.printSchema()
+# VISUALIZE THEM + PRINT SCHEMA
+df_s = [name_basics_df, title_akas_df, title_basics_df, title_episode_df,
+        title_principals_df, title_ratings_df, title_crew_df]
+for df in df_s:
+    df.show()
+    df.printSchema()
 
-# name_basics_df.show()
-# name_basics_df.printSchema()
-
-# title_akas_df.show()
-# title_akas_df.printSchema()
-
-# title_basics_df.show()
-# title_basics_df.printSchema()
-
-# title_episode_df.show()
-# title_episode_df.printSchema()
-
-# title_principals_df.show()
-# title_principals_df.printSchema()
-
-# title_ratings_df.show()
-# title_ratings_df.printSchema()
-
-# title_crew_df.show()
-# title_crew_df.printSchema()
-
-# yano_queries.query_one(title_basics_df, title_ratings_df, spark_session, Window, f, t).show(truncate=False)
-# yano_queries.query_two(spark_session, f, title_principals_df, name_basics_df, t).show(truncate=False)
-# yano_queries.query_three(spark_session, f, title_principals_df, title_ratings_df, name_basics_df, Window,t).show(truncate=False)
-# yano_queries.query_four(spark_session, title_crew_df, title_ratings_df, title_basics_df, name_basics_df, f, t).show(truncate=False)
-# yano_queries.query_five(title_episode_df,  title_ratings_df, title_basics_df, f, t, spark_session).show(truncate=False)
-# yano_queries.query_six(title_akas_df, title_ratings_df, title_basics_df, f, t, spark_session, Window).show(truncate=False)
+# DO QUERIES [first time] OR LOADED ALREADY RESULTS OF THEM
+yano_queries.query_one(title_basics_df, title_ratings_df, spark_session, Window, f, t).show(truncate=False)
+yano_queries.query_two(spark_session, f, title_principals_df, name_basics_df, t, Window).show()
+yano_queries.query_three(spark_session, f, title_principals_df, title_ratings_df, name_basics_df, Window,t).show(truncate=False)
+yano_queries.query_four(spark_session, title_crew_df, title_ratings_df, title_basics_df, name_basics_df, f, t).show(truncate=False)
+yano_queries.query_five(title_episode_df,  title_ratings_df, title_basics_df, f, t, spark_session).show(truncate=False)
+yano_queries.query_six(title_akas_df, title_ratings_df, title_basics_df, f, t, spark_session, Window).show(truncate=False)
